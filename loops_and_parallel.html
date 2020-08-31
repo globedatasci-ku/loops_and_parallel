@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>How to write loops correctly and other stories</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Maria Novosolov" />
+    <meta name="date" content="2020-08-31" />
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link rel="stylesheet" href="custom-fonts.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# How to write loops correctly and other stories
+### Maria Novosolov
+### 2020-08-31
+
+---
+
+
+
+
+class: inverse, center, middle
+
+# Iterating over data in R
+
+---
+
+## Three main methods:
+
+* `for` and `while` loops
+
+* `*apply` function family
+
+* `map` function in `tidyverse`
+
+---
+
+class: inverse, center, middle
+
+# `for` loops
+
+---
+
+# Recipe to successful `for` loop writing
+
+1. Write down the general objective for the loop including the data that will be used
+
+**For example:** Find all the characters in the starwars data that are older than X, and add the word "old" to their name.
+
+2. Write in words each of the steps you will be taking to accomplish your objective
+
+3. Write the code that fulfills each step
+
+4. Test the loop on the first iteration
+---
+
+# Some more advice
+
+* If the loop is complicated then start with a simplified loop and build on top of it
+
+* If you think you need to write a loop within the loop try and find a way to use `*apply` or write a function that will execute the inner loop. 
+
+* Annotate the code as if your life depends on it.
+
+&lt;img src="https://img.libquotes.com/pic-quotes/v2/damian-conway-quote-lbx2j9r.jpg" width=40%&gt;
+
+---
+class: exercise, center, middle
+
+# Let's practice!
+
+I want you to think of an objective that can be used in a loop and then write the steps that you will take to get this objective
+
+---
+
+class: center, middle
+
+# Come present your loop!
+
+---
+
+class: exercise, center, middle
+
+# More practice!
+
+Write the code that fulfills each step of your loop and test that it runs
+
+---
+
+
+
+![](spotify-howtobuildmvp.gif)
+
+"It is faster to make a four-inch mirror and then a six-inch mirror than to make a six-inch mirror." 
+
+---
+
+## Steps: 
+
+1. Start with a limited but working chuck of code.
+2. Rewrite it as a function. (psst.. FUN snippet..).
+
+
+```r
+name &lt;- function(variables) {
+  
+}
+```
+
+3. Test it. OPTIONAL: conditional stopping of functions.
+4. Name it. 
+5. Use it in your code or within a more complicated function. 
+
+---
+class: center, middle
+# Important!!
+## All objects created within a function stay in the function unless you export them using `return()`
+---
+
+### For example: a function that multiplise a given number by 2
+
+Won't return the result
+
+```r
+m2&lt;- function(x){
+  a&lt;- x*2
+}
+m2(2)
+```
+
+Will return a result
+
+```r
+m2&lt;- function(x){
+  a&lt;- x*2
+* return(a)
+}
+m2(2)
+```
+
+```
+## [1] 4
+```
+
+---
+
+# How much code do we want to encapsule in a funcion?
+
+Suprisingly, not so much. Focus on your function doing just one thing.
+
+Most of R's functions are less than 12 lines long!
+
+---
+
+# Naming functions
+
+Function names should be kept short yet informative. Remember: functions are meant to help codes be reusable and readable.
+
+What are good names for these two functions?
+
+
+```r
+f1 &lt;- function(string, prefix) {
+  substr(string, 1, nchar(prefix)) == prefix
+}
+f2 &lt;- function(x) {
+  if (length(x) &lt;= 1) return(NULL)
+  x[-length(x)]
+}
+```
+
+---
+class: exercise, center, middle
+
+# Let's practic!
+
+Write a function that computes the square of the number it is given.
+
+For example, if you give the function 10 it returns 100
+
+---
+
+# `apply` family functions
+
+A family of functions to manipulate data in a repetitive way. 
+These functions allow crossing the data in a number of ways and avoid explicit use of loop constructs.
+
+The most used `apply` functions are `apply()` (that we saw before) and `lapply` that work on lists
+
+---
+
+# `apply()`
+
+![](img/content_content_apply_1.png)
+
+.bottom-left[
+* to read more about the `apply` family https://tinyurl.com/rse8ape
+]
+
+---
+# Anonymous functions
+
+Sometimes, you won't save the function like seen below, but rather - use it directly in a code:
+In R functions are objects in their own right. They aren’t automatically bound to a name. If you choose not to give the function a name, you get an **anonymous function**.
+
+
+```r
+matrix_of_numbers &lt;- matrix(1:100,5,10)
+apply(matrix_of_numbers,2,function(x) x^2)
+```
+
+```
+##      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10]
+## [1,]    1   36  121  256  441  676  961 1296 1681  2116
+## [2,]    4   49  144  289  484  729 1024 1369 1764  2209
+## [3,]    9   64  169  324  529  784 1089 1444 1849  2304
+## [4,]   16   81  196  361  576  841 1156 1521 1936  2401
+## [5,]   25  100  225  400  625  900 1225 1600 2025  2500
+```
+---
+class: exercise
+
+# Practice time!
+
+multiply all the numbers in each row by a different number in the following dataframe (use apply)
+
+
+```r
+df&lt;- as.data.frame(matrix(1:100,5,10))
+df
+```
+
+```
+##   V1 V2 V3 V4 V5 V6 V7 V8 V9 V10
+## 1  1  6 11 16 21 26 31 36 41  46
+## 2  2  7 12 17 22 27 32 37 42  47
+## 3  3  8 13 18 23 28 33 38 43  48
+## 4  4  9 14 19 24 29 34 39 44  49
+## 5  5 10 15 20 25 30 35 40 45  50
+```
+---
+
+# Iterations
+
+To further streamline your code, use iterations to repeat chuncks of code.
+Most basic are `for` and `while` loops. However, there are more ways to iterate code.
+
+Iterations have three main components: an output, a sequence to iterate over, and the body of code.
+
+---
+# Vector allocation will save you a lot of time!
+
+```r
+library(tictoc)
+n_times &lt;- 50000
+tic()
+a &lt;- NULL
+for(i in seq_len(n_times)){
+    a &lt;- c(a, i^2)
+    a
+}
+toc()
+tic()
+a &lt;- vector("double", n_times)
+for(i in seq_len(n_times)){
+    a[i] &lt;- i^2
+}
+toc()
+```
+---
+
+# Sequence
+
+`for (i in (1:10))` is a sequence. So is `while TRUE`. 
+`for (i in seq_along(vector))` is a better way of sequencing if you might get a vector of length 0 like so:
+
+
+
+```r
+y &lt;- vector("double", 0)
+seq_along(y)
+```
+
+```
+## integer(0)
+```
+
+
+```r
+#&gt; integer(0)
+1:length(y)
+```
+
+```
+## [1] 1 0
+```
+
+---
+
+# for i in unique(df$column)
+
+That's a common phrase when working with data.  So common that there is a tidyverse package that does it for you.
+
+![](purrr.png) 
+We will discuss it shortly...
+
+---
+
+# R is a functional language 
+
+That means you can wrap loops within a function and just call that function when neccessary.
+Remember - limit your copy and paste as much as possible!
+
+
+```r
+data &lt;- data.frame(a=rnorm(10),
+               b=rnorm(10))
+col_means &lt;- function(dataframe){
+  output &lt;- vector("double",ncol(dataframe))
+  for (i in seq_along(dataframe)){
+    output[[i]] &lt;- mean(dataframe[[i]])
+  }
+  return(output)
+}
+col_means(data)
+```
+
+```
+## [1] -0.12321639  0.09877783
+```
+
+---
+
+# 99 bottles of beer on the wall
+
+
+Create a function that returns the full song for any number of any vessel (bottles,cans, even boxes... ) of any drink (But no Jägermeister please):
+
+&gt;99 bottles of beer on the wall, 99 bottles of beer. Take one down, pass it around - 98 bottles of beer on the wall
+
+---
+
+class: inverse, center, middle
+
+# `purrr` in a nutshell
+
+---
+
+.center[
+# First: What are pipes in R
+]
+.pull-left[
+![](img/logo.png)
+]
+
+.pull-right[
+### Use %&gt;% to emphasise a sequence of actions
+
+
+```r
+library(tidyverse)
+iris %&gt;% 
+  head() %&gt;% 
+  knitr::kable()
+```
+
+]
+
+---
+
+
+| Sepal.Length| Sepal.Width| Petal.Length| Petal.Width|Species |
+|------------:|-----------:|------------:|-----------:|:-------|
+|          5.1|         3.5|          1.4|         0.2|setosa  |
+|          4.9|         3.0|          1.4|         0.2|setosa  |
+|          4.7|         3.2|          1.3|         0.2|setosa  |
+|          4.6|         3.1|          1.5|         0.2|setosa  |
+|          5.0|         3.6|          1.4|         0.2|setosa  |
+|          5.4|         3.9|          1.7|         0.4|setosa  |
+
+
+---
+.center[
+# Lets look into `purrr::map` function
+
+https://globedatasci-ku.github.io/functions/iteration_map.html
+]
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="libs/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"ratio": "16:9"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

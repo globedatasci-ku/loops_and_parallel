@@ -1,0 +1,342 @@
+---
+title: "How to write loops correctly and other stories"
+author: "Maria Novosolov"
+date: "`r Sys.Date()`"
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    css: ["default", "custom-fonts.css"]
+    chakra: "libs/remark-latest.min.js"
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      ratio: '16:9'
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+library(tidyverse)
+library(pbapply)
+library(foreach)
+```
+
+class: inverse, center, middle
+
+# Iterating over data in R
+
+---
+
+## Three main methods:
+
+* `for` and `while` loops
+
+* `*apply` function family
+
+* `map` function in `tidyverse`
+
+---
+
+class: inverse, center, middle
+
+# `for` loops
+
+---
+
+# Recipe to successful `for` loop writing
+
+1. Write down the general objective for the loop including the data that will be used
+
+**For example:** Find all the characters in the starwars data that are older than X, and add the word "old" to their name.
+
+2. Write in words each of the steps you will be taking to accomplish your objective
+
+3. Write the code that fulfills each step
+
+4. Test the loop on the first iteration
+---
+
+# Some more advice
+
+* If the loop is complicated then start with a simplified loop and build on top of it
+
+* If you think you need to write a loop within the loop try and find a way to use `*apply` or write a function that will execute the inner loop. 
+
+* Annotate the code as if your life depends on it.
+
+<img src="https://img.libquotes.com/pic-quotes/v2/damian-conway-quote-lbx2j9r.jpg" width=40%>
+
+---
+class: exercise, center, middle
+
+# Let's practice!
+
+I want you to think of an objective that can be used in a loop and then write the steps that you will take to get this objective
+
+---
+
+class: center, middle
+
+# Come present your loop!
+
+---
+
+class: exercise, center, middle
+
+# More practice!
+
+Write the code that fulfills each step of your loop and test that it runs
+
+---
+
+
+
+![](spotify-howtobuildmvp.gif)
+
+"It is faster to make a four-inch mirror and then a six-inch mirror than to make a six-inch mirror." 
+
+---
+
+## Steps: 
+
+1. Start with a limited but working chuck of code.
+2. Rewrite it as a function. (psst.. FUN snippet..).
+
+```{r}
+name <- function(variables) {
+  
+}
+```
+
+3. Test it. OPTIONAL: conditional stopping of functions.
+4. Name it. 
+5. Use it in your code or within a more complicated function. 
+
+---
+class: center, middle
+# Important!!
+## All objects created within a function stay in the function unless you export them using `return()`
+---
+
+### For example: a function that multiplise a given number by 2
+
+Won't return the result
+```{r}
+m2<- function(x){
+  a<- x*2
+}
+m2(2)
+```
+
+Will return a result
+```{r}
+m2<- function(x){
+  a<- x*2
+  return(a) #<<
+}
+m2(2)
+```
+
+---
+
+# How much code do we want to encapsule in a funcion?
+
+Suprisingly, not so much. Focus on your function doing just one thing.
+
+Most of R's functions are less than 12 lines long!
+
+---
+
+# Naming functions
+
+Function names should be kept short yet informative. Remember: functions are meant to help codes be reusable and readable.
+
+What are good names for these two functions?
+
+
+```r
+f1 <- function(string, prefix) {
+  substr(string, 1, nchar(prefix)) == prefix
+}
+f2 <- function(x) {
+  if (length(x) <= 1) return(NULL)
+  x[-length(x)]
+}
+```
+
+---
+class: exercise, center, middle
+
+# Let's practic!
+
+Write a function that computes the square of the number it is given.
+
+For example, if you give the function 10 it returns 100
+
+---
+
+# `apply` family functions
+
+A family of functions to manipulate data in a repetitive way. 
+These functions allow crossing the data in a number of ways and avoid explicit use of loop constructs.
+
+The most used `apply` functions are `apply()` (that we saw before) and `lapply` that work on lists
+
+---
+
+# `apply()`
+
+![](img/content_content_apply_1.png)
+
+.bottom-left[
+* to read more about the `apply` family https://tinyurl.com/rse8ape
+]
+
+---
+# Anonymous functions
+
+Sometimes, you won't save the function like seen below, but rather - use it directly in a code:
+In R functions are objects in their own right. They aren’t automatically bound to a name. If you choose not to give the function a name, you get an **anonymous function**.
+
+```{r}
+matrix_of_numbers <- matrix(1:100,5,10)
+apply(matrix_of_numbers,2,function(x) x^2)
+```
+---
+class: exercise
+
+# Practice time!
+
+multiply all the numbers in each row by a different number in the following dataframe (use apply)
+
+```{r}
+df<- as.data.frame(matrix(1:100,5,10))
+df
+```
+---
+
+# Iterations
+
+To further streamline your code, use iterations to repeat chuncks of code.
+Most basic are `for` and `while` loops. However, there are more ways to iterate code.
+
+Iterations have three main components: an output, a sequence to iterate over, and the body of code.
+
+---
+# Vector allocation will save you a lot of time!
+
+```r
+library(tictoc)
+n_times <- 50000
+tic()
+a <- NULL
+for(i in seq_len(n_times)){
+    a <- c(a, i^2)
+    a
+}
+toc()
+tic()
+a <- vector("double", n_times)
+for(i in seq_len(n_times)){
+    a[i] <- i^2
+}
+toc()
+```
+---
+
+# Sequence
+
+`for (i in (1:10))` is a sequence. So is `while TRUE`. 
+`for (i in seq_along(vector))` is a better way of sequencing if you might get a vector of length 0 like so:
+
+
+```{r}
+y <- vector("double", 0)
+seq_along(y)
+```
+
+```{r}
+#> integer(0)
+1:length(y)
+```
+
+---
+
+# for i in unique(df$column)
+
+That's a common phrase when working with data.  So common that there is a tidyverse package that does it for you.
+
+![](purrr.png) 
+We will discuss it shortly...
+
+---
+
+# R is a functional language 
+
+That means you can wrap loops within a function and just call that function when neccessary.
+Remember - limit your copy and paste as much as possible!
+
+```{r}
+data <- data.frame(a=rnorm(10),
+               b=rnorm(10))
+col_means <- function(dataframe){
+  output <- vector("double",ncol(dataframe))
+  for (i in seq_along(dataframe)){
+    output[[i]] <- mean(dataframe[[i]])
+  }
+  return(output)
+}
+col_means(data)
+```
+
+---
+
+# 99 bottles of beer on the wall
+
+
+Create a function that returns the full song for any number of any vessel (bottles,cans, even boxes... ) of any drink (But no Jägermeister please):
+
+>99 bottles of beer on the wall, 99 bottles of beer. Take one down, pass it around - 98 bottles of beer on the wall
+
+---
+
+class: inverse, center, middle
+
+# `purrr` in a nutshell
+
+---
+
+.center[
+# First: What are pipes in R
+]
+.pull-left[
+![](img/logo.png)
+]
+
+.pull-right[
+### Use %>% to emphasise a sequence of actions
+
+```{r eval=FALSE, message=FALSE, warning=FALSE}
+library(tidyverse)
+iris %>% 
+  head() %>% 
+  knitr::kable()
+```
+
+]
+
+---
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+iris %>% 
+  head() %>% 
+  knitr::kable()
+```
+
+
+---
+.center[
+# Lets look into `purrr::map` function
+
+https://globedatasci-ku.github.io/functions/iteration_map.html
+]
+
