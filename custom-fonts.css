@@ -1,0 +1,72 @@
+@import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+@import url(https://fonts.googleapis.com/css?family=Parisienne|Exo|Philosopher|Source+Code+Pro:400);
+@import url('https://fonts.googleapis.com/css?family=Inconsolata:400,700');
+@import url('https://fonts.googleapis.com/css?family=Fira+Code:400,700');
+
+.remark-slide-content {
+    font-family: 'Gill Sans', 'Calibri', 'Palatino Linotype', 'Book Antiqua', Palatino, 'Microsoft YaHei', 'Songti SC', sans-serif;
+    color: #47484D;
+    font-size: 190%;}
+.remark-slide-content > h1, h2, h3 {
+  font-family: 'Yanone Kaffeesatz', sans-serif;
+  font-weight: normal;
+}
+
+.fancy {
+    font-family: 'Parisienne', cursive; }
+
+.large {
+    font-size: 120%;
+}
+
+.xlarge {
+    font-size: 150%;
+}
+
+.small {
+    font-size: 80%;
+}
+
+.img-small img {
+    width: 50%;
+    height: auto;
+}
+
+/*.remark-code, .remark-inline-code {
+//    font-family: 'Inconsolata', 'Source Code Pro', 'Lucida Console', Monaco, monospace;
+//    font-size: 80%;
+}*/
+
+.remark-code, .remark-inline-code {
+    font-family: 'Fira Code', Monaco, monospace;
+    font-size: 80%;
+}
+
+.bottom-right {
+    position: absolute;
+    right: 5px;
+    bottom: 10px;
+}
+
+.center {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.exercise {
+  background-color: #5f021f;
+  color: #f3f3f3;
+  //text-shadow: 0 0 10px #333;
+}
+.exercise h1, .inverse h2, .inverse h3 {
+  color: #f3f3f3;
+}
+
+.pull-left-big {
+  float: left;
+  width: 57%;
+}
+.pull-right-small {
+  float: right;
+  width: 37%;
+}
