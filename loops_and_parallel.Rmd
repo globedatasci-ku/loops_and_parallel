@@ -27,6 +27,10 @@ data("starwars")
 
 * More interactive - you do the work, we are just here to help
 
+* Community participation
+    - Slack
+    - Code camp
+
 ---
 class: inverse, center, middle
 
