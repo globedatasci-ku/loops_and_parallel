@@ -503,7 +503,7 @@ https://privefl.github.io/blog/a-guide-to-parallelism-in-r/
 ---
 class: exercise, center, middle
 
-# Let's practic!
+# Let's practice!
 
 Convert the `mtcars` for loop to a foreach loop. Bonus, make it run in parallel
 ---
