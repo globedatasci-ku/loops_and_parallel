@@ -405,9 +405,9 @@ do.call('c', res)
 # An R syntax detour - the `do.call()` function
 
 * Takes a function and gives it a list of arguments
-- What, you mean like `lapply()`?
-* Nope, do.call can collapse lists into a *single vector*
-- `lapply` always returns a list.
+* What, you mean like `lapply()`?
+    - Nope, do.call can collapse lists into a *single vector*
+    - `lapply` always returns a list.
 * Also useful for collapsing lists using `rbind` and `cbind`
 
 ---
@@ -415,13 +415,13 @@ do.call('c', res)
 # An R syntax detour - the `do.call()` function
 
 ```{r}
-lapply(starwars$films[1:3], 
+lapply(starwars$films[8:10], 
        c)
 ```
 
 ```{r}
 do.call(c, 
-        starwars$films[1:3])
+        starwars$films[8:10])
 ```
 
 ---

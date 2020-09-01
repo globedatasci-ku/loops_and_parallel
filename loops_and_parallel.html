@@ -137,18 +137,18 @@ df[i]
 
 ```
 ## # A tibble: 10 x 1
-##         a
-##     &lt;dbl&gt;
-##  1  0.232
-##  2  1.35 
-##  3 -0.365
-##  4  1.43 
-##  5  0.279
-##  6  0.523
-##  7 -0.494
-##  8  0.415
-##  9 -0.333
-## 10 -2.47
+##          a
+##      &lt;dbl&gt;
+##  1  0.605 
+##  2 -0.713 
+##  3 -1.01  
+##  4  0.235 
+##  5  0.849 
+##  6  0.822 
+##  7 -1.87  
+##  8  1.28  
+##  9  0.0926
+## 10  1.36
 ```
 ]
 
@@ -159,8 +159,8 @@ df[[i]]
 ```
 
 ```
-##  [1]  0.2319938  1.3540007 -0.3648100  1.4305010  0.2787356  0.5234871
-##  [7] -0.4938247  0.4146838 -0.3333516 -2.4730080
+##  [1]  0.6047980 -0.7128725 -1.0093616  0.2354535  0.8487913  0.8221690
+##  [7] -1.8658483  1.2800762  0.0926077  1.3568828
 ```
 
 ]
@@ -1036,9 +1036,9 @@ do.call('c', res)
 # An R syntax detour - the `do.call()` function
 
 * Takes a function and gives it a list of arguments
-- What, you mean like `lapply()`?
-* Nope, do.call can collapse lists into a *single vector*
-- `lapply` always returns a list.
+* What, you mean like `lapply()`?
+    - Nope, do.call can collapse lists into a *single vector*
+    - `lapply` always returns a list.
 * Also useful for collapsing lists using `rbind` and `cbind`
 
 ---
@@ -1047,44 +1047,34 @@ do.call('c', res)
 
 
 ```r
-lapply(starwars$films[1:3], 
+lapply(starwars$films[8:10], 
        c)
 ```
 
 ```
 ## [[1]]
-## [1] "The Empire Strikes Back" "Revenge of the Sith"    
-## [3] "Return of the Jedi"      "A New Hope"             
-## [5] "The Force Awakens"      
+## [1] "A New Hope"
 ## 
 ## [[2]]
-## [1] "The Empire Strikes Back" "Attack of the Clones"   
-## [3] "The Phantom Menace"      "Revenge of the Sith"    
-## [5] "Return of the Jedi"      "A New Hope"             
+## [1] "A New Hope"
 ## 
 ## [[3]]
 ## [1] "The Empire Strikes Back" "Attack of the Clones"   
 ## [3] "The Phantom Menace"      "Revenge of the Sith"    
-## [5] "Return of the Jedi"      "A New Hope"             
-## [7] "The Force Awakens"
+## [5] "Return of the Jedi"      "A New Hope"
 ```
 
 
 ```r
 do.call(c, 
-        starwars$films[1:3])
+        starwars$films[8:10])
 ```
 
 ```
-##  [1] "The Empire Strikes Back" "Revenge of the Sith"    
-##  [3] "Return of the Jedi"      "A New Hope"             
-##  [5] "The Force Awakens"       "The Empire Strikes Back"
-##  [7] "Attack of the Clones"    "The Phantom Menace"     
-##  [9] "Revenge of the Sith"     "Return of the Jedi"     
-## [11] "A New Hope"              "The Empire Strikes Back"
-## [13] "Attack of the Clones"    "The Phantom Menace"     
-## [15] "Revenge of the Sith"     "Return of the Jedi"     
-## [17] "A New Hope"              "The Force Awakens"
+## [1] "A New Hope"              "A New Hope"             
+## [3] "The Empire Strikes Back" "Attack of the Clones"   
+## [5] "The Phantom Menace"      "Revenge of the Sith"    
+## [7] "Return of the Jedi"      "A New Hope"
 ```
 
 ---
